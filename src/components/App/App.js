@@ -15,7 +15,7 @@ class App extends Component {
       players: {},
       width: 700,
       height: 1000,
-      selectedPlayer: '',
+      selectedPlayer: {},
       searchValue: 'Lebron',
     };
     this.maxWidth = Infinity;

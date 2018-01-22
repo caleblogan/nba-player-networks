@@ -10,11 +10,18 @@ class PlayersGraph extends Component {
   constructor(props) {
     super(props);
     this.data = [];
+    this.drawLink = this.drawLink.bind(this);
+    this.drawNode = this.drawNode.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.graph !== nextProps.graph) {// || this.props.selected !== nextProps.selected) {
-      this.renderChart(nextProps.graph);
+    if (nextProps) {
+      this.selected = nextProps.selected;
+    }
+    if (nextProps.graph && this.props.graph !== nextProps.graph) {// || this.props.selected !== nextProps.selected) {
+      this.setupChart(nextProps.graph);
+    } else if (nextProps.selected !== this.props.selected) {
+      this.ticked();
     }
   }
 
@@ -22,87 +29,36 @@ class PlayersGraph extends Component {
     return !!nextProps && nextProps.width !== this.props.width;
   }
 
-  componentDidUpdate() {
-    this.renderChart(this.props.graph);
-  }
-
-  renderChart(graph) {
+  setupChart(graph) {
     let {links, nodes} = graph;
+    this.canvas = document.querySelector("canvas");
+    this.ctx = this.canvas.getContext("2d");
 
-    let simulation = d3.forceSimulation(nodes)
+    this.simulation = d3.forceSimulation(nodes)
       .force("charge", d3.forceManyBody().strength(-50))
       .force("link", d3.forceLink(links).id(function(d) { return d.id; }).distance(500).strength(.3))
       .force("x", d3.forceX())
       .force("y", d3.forceY())
       .force("center", d3.forceCenter())
-      .on("tick", ticked);
+      .on("tick", this.ticked.bind(this));
 
-    this.canvas = document.querySelector("canvas");
-    this.context = this.canvas.getContext("2d");
-    let canvas = this.canvas, context = this.context;
-    let width = canvas.width;
-    let height = canvas.height;
-
-    let self = this;
-    function ticked() {
-      context.clearRect(0, 0, width, height);
-      context.save();
-      context.translate(width / 2, height / 2);
-
-      context.beginPath();
-      links.filter(d => d.source.id !== String(self.props.selected.user_id)).forEach(drawLink);
-      context.strokeStyle = "rgba(120, 120, 120, .1)";
-      context.lineWidth = .1;
-      context.stroke();
-
-      context.save();
-      context.beginPath();
-      let [mutual, nonmutual] = self.splitLinks(links, String(self.props.selected.user_id));
-      mutual.forEach(drawLink);
-      context.strokeStyle = "#0154fa";
-      context.lineWidth = .5;
-      context.stroke();
-      context.restore();
-
-      context.save();
-      context.beginPath();
-      nonmutual.forEach(drawLink);
-      context.strokeStyle = "#fa2405";
-      context.lineWidth = .7;
-      context.stroke();
-      context.restore();
-
-      self.data = [];
-      context.beginPath();
-      nodes.forEach(self.drawNode);
-      context.fillStyle = '#040aff';
-      context.fill();
-      context.strokeStyle = "#fff";
-      context.stroke();
-
-      context.restore();
-    }
-
-
-
-    function drawLink(d) {
-      context.moveTo(d.source.x, d.source.y);
-      context.lineTo(d.target.x, d.target.y);
-    }
-
-    d3.select(canvas)
+    d3.select(this.canvas)
       .on('click', handleClick)
       .on('mousemove', handleMousemove)
       .call(d3.drag()
-        .container(canvas)
+        .container(this.canvas)
         .subject(dragsubject)
         .on("start", dragstarted)
         .on("drag", dragged)
         .on("end", dragended));
 
+    let self = this,
+      simulation = this.simulation;
+
     function handleClick() {
+      let {width, height} = self.canvas;
       let [x, y] = d3.mouse(this);
-      let target = findClosestTarget([x - width / 2, y - height / 2], self.data);
+      let target = self.findClosestTarget([x - width / 2, y - height / 2], self.data);
       if (target) {
         self.props.onClick(target.id);
       } else {
@@ -111,8 +67,9 @@ class PlayersGraph extends Component {
     }
 
     function handleMousemove() {
+      let {width, height} = self.canvas;
       let [x, y] = d3.mouse(this);
-      let target = findClosestTarget([x - width / 2, y - height / 2], self.data);
+      let target = self.findClosestTarget([x - width / 2, y - height / 2], self.data);
       if (target) {
         self.props.onHover(target.id);
       }
@@ -125,6 +82,7 @@ class PlayersGraph extends Component {
     }
 
     function dragsubject() {
+      let {width, height} = self.canvas;
       return simulation.find(d3.event.x - width / 2, d3.event.y - height / 2);
     }
 
@@ -138,34 +96,81 @@ class PlayersGraph extends Component {
       d3.event.subject.fx = null;
       d3.event.subject.fy = null;
     }
+  }
 
-    function findClosestTarget(point, data) {
-      let node;
-      let minDistance = Infinity;
-      data.forEach(function(d) {
-        let dx = d.x - point[0];
-        let dy = d.y - point[1];
-        let distance = Math.sqrt((dx * dx) + (dy * dy));
-        if (distance < minDistance && distance < d.weight / 5 + .5) {
-          minDistance = distance;
-          node = d;
-        }
-      });
-      return node;
-    }
+  ticked() {
+    let {links, nodes} = this.props.graph;
+    let context = this.ctx;
+    let {width, height} = this.canvas;
+    context.clearRect(0, 0, width, height);
+    context.save();
+    context.translate(width / 2, height / 2);
+
+    context.beginPath();
+    links.filter(d => d.source.id !== String(this.selected.user_id)).forEach(this.drawLink);
+    context.strokeStyle = "rgba(120, 120, 120, .1)";
+    context.lineWidth = .1;
+    context.stroke();
+
+    context.save();
+    context.beginPath();
+    let [mutual, nonmutual] = this.splitLinks(links, String(this.selected.user_id));
+    mutual.forEach(this.drawLink);
+    context.strokeStyle = "#0154fa";
+    context.lineWidth = .5;
+    context.stroke();
+    context.restore();
+
+    context.save();
+    context.beginPath();
+    nonmutual.forEach(this.drawLink);
+    context.strokeStyle = "#fa2405";
+    context.lineWidth = .7;
+    context.stroke();
+    context.restore();
+
+    this.data = [];
+    context.beginPath();
+    nodes.forEach(this.drawNode);
+    context.fillStyle = '#040aff';
+    context.fill();
+    context.strokeStyle = "#fff";
+    context.stroke();
+
+    context.restore();
+  }
+
+  findClosestTarget(point, data) {
+    let node;
+    let minDistance = Infinity;
+    data.forEach(function(d) {
+      let dx = d.x - point[0];
+      let dy = d.y - point[1];
+      let distance = Math.sqrt((dx * dx) + (dy * dy));
+      if (distance < minDistance && distance < d.weight / 5 + .5) {
+        minDistance = distance;
+        node = d;
+      }
+    });
+    return node;
+  }
+
+  drawLink(d) {
+    this.ctx.moveTo(d.source.x, d.source.y);
+    this.ctx.lineTo(d.target.x, d.target.y);
   }
 
   drawNode(d) {
     let r = d.weight / 5;
-    this.context.moveTo(d.x + r, d.y);
-    this.context.arc(d.x, d.y, r, 0, 2 * Math.PI);
+    this.ctx.moveTo(d.x + r, d.y);
+    this.ctx.arc(d.x, d.y, r, 0, 2 * Math.PI);
     this.data.push({...d})
   }
 
   /**
    * Returns an array of mutual links and nonmutual links
-   * @param links all links
-   * @param targetID the target players id
+   * @param links - all links
+   * @param targetID - the target players id
    */
   splitLinks(links, targetID) {
     let asTarget = {};
@@ -194,7 +199,6 @@ class PlayersGraph extends Component {
       <canvas
         width={this.props.width}
         height={this.props.height}
-        ref={canvas => this.canvas = canvas}
       />
     );
   }
