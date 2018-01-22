@@ -17,6 +17,7 @@ class PlayersGraph extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps) {
       this.selected = nextProps.selected;
+      this.shouldRenderAllLinks = !!nextProps.shouldRenderAllLinks;
     }
     if (nextProps.graph && this.props.graph !== nextProps.graph) {// || this.props.selected !== nextProps.selected) {
       this.setupChart(nextProps.graph);
@@ -106,11 +107,15 @@ class PlayersGraph extends Component {
     context.save();
     context.translate(width / 2, height / 2);
 
-    context.beginPath();
-    links.filter(d => d.source.id !== String(this.selected.user_id)).forEach(this.drawLink);
-    context.strokeStyle = "rgba(120, 120, 120, .1)";
-    context.lineWidth = .1;
-    context.stroke();
+    if (this.shouldRenderAllLinks) {
+      context.beginPath();
+      // links.filter(d => d.source.id !== String(this.selected.user_id)).forEach(this.drawLink);
+      links.forEach(this.drawLink);
+      // context.strokeStyle = "rgba(120, 120, 120, .1)";
+      context.strokeStyle = "rgb(220, 220, 220)";
+      context.lineWidth = .1;
+      context.stroke();
+    }
 
     context.save();
     context.beginPath();

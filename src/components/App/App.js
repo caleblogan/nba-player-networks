@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Loader, Input, Form, Button, Grid, Header } from 'semantic-ui-react'
+import { Checkbox, Loader, Input, Form, Button, Grid, Header } from 'semantic-ui-react'
 
 import * as d3 from 'd3';
 
@@ -17,12 +17,14 @@ class App extends Component {
       height: 1000,
       selectedPlayer: {},
       searchValue: 'Lebron',
+      shouldRenderAllLinks: true,
     };
     this.maxWidth = Infinity;
     this.handlePlayerClick = this.handlePlayerClick.bind(this);
     this.handlePlayerHover = this.handlePlayerHover.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
     this.handleSearchOnChange = this.handleSearchOnChange.bind(this);
+    this.handleChecked = this.handleChecked.bind(this);
   }
 
   componentDidMount() {
@@ -76,6 +78,12 @@ class App extends Component {
     })
   }
 
+  handleChecked(e) {
+    this.setState(prevState => ({
+      shouldRenderAllLinks: !prevState.shouldRenderAllLinks
+    }));
+  }
+
   render() {
     return (
       <div className={styles.container}>
@@ -93,6 +101,11 @@ class App extends Component {
               />
               <Button>Search</Button>
             </Form>
+            <Checkbox
+                label="display all links (turn off for performance)"
+                onChange={this.handleChecked}
+                checked={this.state.shouldRenderAllLinks}
+              />
             <Header as="h4" className={styles.selectedPlayer}>Selected Player: {this.state.selectedPlayer.name}</Header>
             <div className={styles.legend}>
               <ul>
@@ -109,6 +122,7 @@ class App extends Component {
               onClick={this.handlePlayerClick}
               onHover={this.handlePlayerHover}
               selected={this.state.selectedPlayer}
+              shouldRenderAllLinks={this.state.shouldRenderAllLinks}
             />
           </Grid.Row>
         </Grid>
