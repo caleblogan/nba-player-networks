@@ -48,7 +48,7 @@ const config = {
   plugins: [
     localCss,
     globalCss,
-    // new UglifyJsPlugin(),
+    new UglifyJsPlugin(),
   ]
 };
 

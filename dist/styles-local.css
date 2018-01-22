@@ -1,0 +1,50 @@
+.App__container__1VScG {
+  margin-top: 20px; }
+
+.App__grid__3VIdh {
+  position: relative; }
+
+.App__infoBox__212hm {
+  position: fixed;
+  z-index: 800;
+  padding: 0 !important;
+  top: 120px;
+  left: 0; }
+
+.App__selectedPlayer__3BK0y {
+  position: relative;
+  top: 0;
+  left: 0;
+  padding: 12px 12px !important;
+  border-left: 6px solid #fa2405 !important;
+  background: #222;
+  color: white !important; }
+
+.App__legend__28Jx5 {
+  position: relative; }
+  .App__legend__28Jx5 .App__box__3AM_0 {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-right: 4px; }
+  .App__legend__28Jx5 .App__circle__4MEqo {
+    border-radius: 4px; }
+  .App__legend__28Jx5 ul {
+    padding-left: 4px; }
+  .App__legend__28Jx5 li {
+    list-style: none;
+    text-align: left; }
+
+.App__hoverPopup__1Mao- {
+  position: fixed;
+  top: 120px;
+  right: 0;
+  padding: 4px 6px;
+  color: white;
+  font-size: .8em;
+  border-radius: 4px;
+  background: #222;
+  border-right: 2px solid #0154FA; }
+
+.App__search__2mA8u input {
+  position: relative; }
