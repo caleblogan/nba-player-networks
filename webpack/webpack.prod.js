@@ -1,35 +1,17 @@
-const path = require('path');
 const webpack = require('webpack');
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const merge = require('webpack-merge');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 const localCss = new ExtractTextPlugin('styles-local.css');
 const globalCss = new ExtractTextPlugin('styles-global.css');
 
-const config = {
-  entry: ['babel-polyfill', './src/index.js'],
-  output: {
-    path: path.resolve(__dirname, './dist/'),
-    publicPath: '/',
-    filename: 'bundle.js'
-  },
-  devtool: 'cheap-module-eval-source-map',
-  devServer: {
-    historyApiFallback: true,
-    contentBase: './dist',
-  },
+const common = require('./webpack.common');
+
+
+const prodConfig = {
   module: {
     rules: [
-      {
-        test: /\.jsx?$/,
-        exclude: /(node_modules|bower_components)/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['env', 'react']
-          }
-        }
-      },
       {
         test: /\.scss$/,
         use: localCss.extract({
@@ -50,10 +32,10 @@ const config = {
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('production'),
     }),
-    localCss,
     globalCss,
+    localCss,
     new UglifyJsPlugin(),
   ]
 };
 
-module.exports = config;
+module.exports = merge(common, prodConfig);
