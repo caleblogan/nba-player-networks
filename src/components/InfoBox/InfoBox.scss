@@ -1,0 +1,76 @@
+.container {
+  margin-top: 20px;
+}
+
+.header {
+  //box-shadow: 0 1px 4px 4px #aaa;
+  //border-bottom: 1px solid #eee;
+}
+
+.grid {
+  position: relative;
+}
+
+.infoBox {
+  position: fixed;
+  z-index: 800;
+  padding: 0 !important;
+  top: 120px;
+  left: 0;
+  width: 275px;
+}
+
+.Form {
+  padding-left: 12px;
+  text-align: left;
+}
+
+.selectedPlayer {
+  position: relative;
+  top: 0;
+  left: 0;
+  padding: 12px 12px !important;
+  border-left: 6px solid #fa2405 !important;
+  background: #222;
+  color: white !important;
+}
+
+.legend {
+  position: relative;
+  left: 8px;
+
+  .box {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-right: 4px;
+  }
+
+  .circle {
+    border-radius: 4px;
+  }
+
+  ul {
+    padding-left: 4px;
+  }
+  li {
+    list-style: none;
+    text-align: left;
+  }
+}
+
+.hoverPopup {
+  position: fixed;
+  top: 120px;
+  right: 0;
+  padding: 4px 6px;
+  color: white;
+  font-size: .8em;
+  border-radius: 4px;
+  background: #222;
+  border-right: 2px solid #0154FA;
+}
+
+.search input {
+  position: relative;
+}

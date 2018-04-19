@@ -6,6 +6,8 @@ import * as d3 from 'd3';
 import PlayersGraph from "../PlayersGraph/PlayersGraph";
 
 import styles from './App.scss';
+import InfoBox from "../InfoBox/InfoBox";
+import InfoBoxMobile from "../InfoBox/InfoBoxMobile";
 
 class App extends Component {
   constructor(props) {
@@ -28,6 +30,16 @@ class App extends Component {
   }
 
   componentDidMount() {
+    if (window.innerWidth < 550) {
+      this.setState({shouldRenderAllLinks: false});
+    }
+    if (window.innerWidth < 850) {
+      this.setState({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    }
+
     d3.json("graph.json", (err, graph) => {
       if (err) throw err;
       d3.json("players.json", (error, data) => {
@@ -85,36 +97,35 @@ class App extends Component {
   }
 
   render() {
+    const isSmallScreen = window.innerWidth < 850;
+
     return (
       <div className={styles.container}>
         <Grid centered className={styles.grid}>
+          {!isSmallScreen &&
           <Grid.Row>
             <Header className={styles.header} as="h1" textAlign="center">NBA Twitter Network</Header>
           </Grid.Row>
-          <div className={styles.infoBox}>
-            <Form onSubmit={this.handleSearch}>
-              <Input
-                value={this.state.searchValue}
-                className={styles.search}
-                placeholder="search player..."
-                onChange={this.handleSearchOnChange}
-              />
-              <Button>Search</Button>
-            </Form>
-            <Checkbox
-                label="display all links (turn off for performance)"
-                onChange={this.handleChecked}
-                checked={this.state.shouldRenderAllLinks}
-              />
-            <Header as="h4" className={styles.selectedPlayer}>Selected Player: {this.state.selectedPlayer.name}</Header>
-            <div className={styles.legend}>
-              <ul>
-                <li><div className={styles.box} style={{background: "#0154FA"}}/>line: mutual follow</li>
-                <li><div className={styles.box} style={{background: "#fa2405"}}/>line: outgoing follow</li>
-                <li><div className={[styles.circle, styles.box].join(' ')} style={{background: "#040aff"}}/>size: n incoming player follows</li>
-              </ul>
-            </div>
-          </div>
+          }
+          {isSmallScreen ? (
+            <InfoBoxMobile
+              searchValue={this.state.searchValue}
+              onSearchChange={this.handleSearchOnChange}
+              onSearchSubmit={this.handleSearch}
+              selectedPlayer={this.state.selectedPlayer}
+              shouldRenderAllLinks={this.state.shouldRenderAllLinks}
+              onCheck={this.handleChecked}
+            />
+          ) : (
+            <InfoBox
+              searchValue={this.state.searchValue}
+              onSearchChange={this.handleSearchOnChange}
+              onSearchSubmit={this.handleSearch}
+              selectedPlayer={this.state.selectedPlayer}
+              shouldRenderAllLinks={this.state.shouldRenderAllLinks}
+              onCheck={this.handleChecked}
+            />
+          )}
           <Grid.Row centered={true}>
             <PlayersGraph
               graph={this.state.graph} players={this.state.players}
@@ -126,7 +137,7 @@ class App extends Component {
             />
           </Grid.Row>
         </Grid>
-        { this.state.hoveredPlayer && (
+        { this.state.hoveredPlayer && !isSmallScreen && (
           <div className={styles.hoverPopup}>{this.state.hoveredPlayer.name}</div>
         )
         }

@@ -48,3 +48,106 @@
 
 .App__search__2mA8u input {
   position: relative; }
+.InfoBox__container__1DlwI {
+  margin-top: 20px; }
+
+.InfoBox__grid__Sow_c {
+  position: relative; }
+
+.InfoBox__infoBox__1J38K {
+  position: fixed;
+  z-index: 800;
+  padding: 0 !important;
+  top: 120px;
+  left: 0;
+  width: 275px; }
+
+.InfoBox__Form__26DYt {
+  padding-left: 12px;
+  text-align: left; }
+
+.InfoBox__selectedPlayer__254na {
+  position: relative;
+  top: 0;
+  left: 0;
+  padding: 12px 12px !important;
+  border-left: 6px solid #fa2405 !important;
+  background: #222;
+  color: white !important; }
+
+.InfoBox__legend__3rwic {
+  position: relative;
+  left: 8px; }
+  .InfoBox__legend__3rwic .InfoBox__box__3yZws {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-right: 4px; }
+  .InfoBox__legend__3rwic .InfoBox__circle__6VpZj {
+    border-radius: 4px; }
+  .InfoBox__legend__3rwic ul {
+    padding-left: 4px; }
+  .InfoBox__legend__3rwic li {
+    list-style: none;
+    text-align: left; }
+
+.InfoBox__hoverPopup__3Fmbo {
+  position: fixed;
+  top: 120px;
+  right: 0;
+  padding: 4px 6px;
+  color: white;
+  font-size: .8em;
+  border-radius: 4px;
+  background: #222;
+  border-right: 2px solid #0154FA; }
+
+.InfoBox__search__2oDUl input {
+  position: relative; }
+.InfoBoxMobile__infoBox__1to8g {
+  position: relative;
+  padding: 0 4px !important;
+  margin-top: -5px;
+  width: 100%; }
+
+.InfoBoxMobile__Form__1H4-T {
+  padding-left: 12px;
+  text-align: left; }
+
+.InfoBoxMobile__selectedPlayer__2hY4m {
+  width: 100%;
+  padding: 12px 12px !important;
+  border-left: 16px solid #fa2405 !important;
+  margin-bottom: 0 !important;
+  background: #222;
+  color: white !important; }
+
+.InfoBoxMobile__legend__LLViu {
+  position: relative;
+  left: 8px; }
+  .InfoBoxMobile__legend__LLViu .InfoBoxMobile__box__3j5xT {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-right: 4px; }
+  .InfoBoxMobile__legend__LLViu .InfoBoxMobile__circle__2CbkL {
+    border-radius: 4px; }
+  .InfoBoxMobile__legend__LLViu ul {
+    padding-left: 4px; }
+  .InfoBoxMobile__legend__LLViu li {
+    list-style: none;
+    text-align: left; }
+
+.InfoBoxMobile__hoverPopup__2JFZm {
+  position: fixed;
+  top: 120px;
+  right: 0;
+  padding: 4px 6px;
+  color: white;
+  font-size: .8em;
+  border-radius: 4px;
+  background: #222;
+  border-right: 2px solid #0154FA; }
+
+.InfoBoxMobile__search__2fpap input {
+  position: relative; }
